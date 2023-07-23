@@ -1,75 +1,101 @@
 #!/bin/bash
 
-ansible_setup_file="https://raw.githubusercontent.com/Nos43ratu/ansible/main/macos_ansible.yml"
+ansible_config="https://github.com/Nos43ratu/ansible"
 
 pretty_print() {
-  printf "\n%b\n" "$1"
+  get_color() {
+    case "$1" in
+      error)   echo -e "\033[0;31m" ;;
+      success) echo -e "\033[0;32m" ;;
+      info)    echo -e "\033[0;33m" ;;
+      *)       echo -e "\033[0m"    ;;
+    esac
+  }
+
+  get_icon() {
+    case "$1" in
+      error)   echo -e "✖" ;;
+      success) echo -e "✔" ;;
+      info)    echo -e "➜" ;;
+      *)       echo -e "?" ;;
+    esac
+  }
+
+  local color=$(get_color "$1")
+  local icon=$(get_icon "$1")
+  local message="${2:-$1}"
+  local timestamp=$(date +"%H:%M:%S")
+
+  echo -e "$color[$timestamp] $icon $message"
+
+  [ "$1" = "error" ] && return 1 || return 0
 }
 
-install_homebrew() {
-  printf "Installing Homebrew..."
-  
+install_brew() {
+  pretty_print "info" "Installing Homebrew..."
+
   if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    pretty_print "Homebrew installed successfully."
+    pretty_print "success" "Homebrew installed successfully!"
 
     if [ ! -f ~/.zshrc ]; then
-      pretty_print "Putting Homebrew location earlier in PATH..."
+      pretty_print "info" "Adding Homebrew to PATH..."
+      
       touch ~/.zshrc
       echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
       eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
   else
-    echo "Homebrew is already installed."
+    pretty_print "success" "Homebrew already installed!"
   fi
-
-  pretty_print "Updating Homebrew..."
-
-  brew update
-  
-  pretty_print "Homebrew updated successfully."
 }
 
 install_ansible() {
-  pretty_print "Installing Ansible..."
+  pretty_print "info" "Installing Ansible..."
 
   if ! command -v ansible &> /dev/null; then
     brew install ansible
+
+    pretty_print "success" "Ansible installed successfully!"
   else
-    pretty_print "Ansible is already installed."
+    pretty_print "success" "Ansible already installed!"
   fi
-
-  pretty_print "Ansible installed successfully."
 }
 
-run_ansible_playbook() {
-  pretty_print "Running Ansible playbook..."
+clone_repo() {
+  pretty_print "info" "Cloning Ansible repository..."
 
-  if [ -z "$1" ]; then
-    echo "Please provide the raw URL of the Ansible playbook."
-    exit 1
+  if [ ! -d ~/ansible ]; then
+    git clone $ansible_config ~/ansible
+
+    pretty_print "success" "Ansible repository cloned successfully!"
+  else
+    pretty_print "success" "Ansible repository already cloned!"
   fi
-
-  pretty_print "Fetching Ansible playbook from: $1"
-  curl -sLO "$1"
-  playbook_file=$(basename "$1")
-
-  pretty_print "Running Ansible playbook: $playbook_file"
-  ansible-playbook "$playbook_file"
-
-  pretty_print "Ansible playbook run successfully."
-
-  pretty_print "Cleaning up..."
-  rm "$playbook_file"
 }
 
-pretty_print "Setting up your Mac..."
+run_playbook() {
+  pretty_print "info" "Running Ansible playbook..."
 
-install_homebrew
+  ansible-playbook ~/ansible/playbook.yml
 
+  pretty_print "success" "Ansible playbook ran successfully!"
+}
+
+clean_up() {
+  pretty_print "info" "Cleaning up..."
+
+  rm -rf ~/ansible
+  rm -rf ~/macos_setup.sh
+
+  pretty_print "success" "Clean up completed!"
+}
+
+install_brew
 install_ansible
+clone_repo
+run_playbook
+clean_up
 
-run_ansible_playbook "$ansible_setup_file"
-
-pretty_print "All done!"
+exit 0

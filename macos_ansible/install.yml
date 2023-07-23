@@ -1,0 +1,68 @@
+- hosts: localhost
+  vars:
+    source_key: "./.ssh/id_rsa"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+    personal: "{{ lookup('env', 'HOME') }}/personal"
+  tasks:
+    - name: install iterm2
+      community.general.homebrew_cask:
+        name: iterm2
+        state: present
+        tags:
+          - terminal
+
+    - name: install visual studio code
+      community.general.homebrew_cask:
+        name: visual-studio-code
+        state: present
+        tags:
+          - vscode
+          - editor
+    
+    -name: install jetbrains toolbox
+      community.general.homebrew_cask:
+        name: jetbrains-toolbox
+        state: present
+        tags:
+          - jetbrains
+          - editor
+
+    -name: install telegram
+      community.general.homebrew_cask:
+        name: telegram
+        state: present
+        tags:
+          - telegram
+          - social
+
+    -name: install slack 
+      community.general.homebrew_cask:
+        name: slack
+        state: present
+        tags:
+          - slack
+          - social
+
+    -name: install discord
+      community.general.homebrew_cask:
+        name: discord
+        state: present
+        tags:
+          - discord
+          - social
+              
+    -name: install spotify
+      community.general.homebrew_cask:
+        name: spotify
+        state: present
+        tags:
+          - spotify
+          - music
+    
+    -name: install docker
+      community.general.homebrew_cask:
+        name: docker
+        state: present
+        tags:
+          - docker
+          - devops

@@ -1,0 +1,15 @@
+- name: install visual studio code
+  community.general.homebrew_cask:
+    name: visual-studio-code
+    state: present
+    tags:
+      - vscode
+      - editor
+    
+- name: install jetbrains toolbox
+  community.general.homebrew_cask:
+    name: jetbrains-toolbox
+    state: present
+    tags:
+      - jetbrains
+      - editor

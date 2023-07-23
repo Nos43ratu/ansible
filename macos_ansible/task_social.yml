@@ -1,0 +1,23 @@
+- name: install telegram
+  community.general.homebrew_cask:
+    name: telegram
+    state: present
+    tags:
+      - telegram
+      - social
+
+- name: install slack 
+  community.general.homebrew_cask:
+    name: slack
+    state: present
+    tags:
+      - slack
+      - social
+
+- name: install discord
+  community.general.homebrew_cask:
+    name: discord
+    state: present
+    tags:
+      - discord
+      - social
