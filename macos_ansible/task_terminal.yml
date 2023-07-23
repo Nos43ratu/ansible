@@ -1,6 +1,7 @@
-    - name: install iterm2
-      community.general.homebrew_cask:
-        name: iterm2
-        state: present
-        tags:
-          - terminal
+- name: install iterm2
+  community.general.homebrew_cask:
+    name: iterm2
+    state: present
+    tags:
+      - terminal
+- name: zsh-autosuggestions
