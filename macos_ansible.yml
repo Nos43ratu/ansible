@@ -1,0 +1,33 @@
+- hosts: localhost
+  # vars:
+  #   source_key: "./.ssh/id_rsa"
+  #   dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+  #   personal: "{{ lookup('env', 'HOME') }}/personal"
+# install iterm2 with homebrew
+  tasks:
+    - name: install iterm2
+      homebrew:
+        name: iterm2
+        state: present
+        # install vscode with homebrew
+    - name: install vscode
+      homebrew:
+        name: visual-studio-code
+        state: present
+# install oh-my-zsh with homebrew
+    # - name: install oh-my-zsh
+    #   homebrew:
+    #     name: oh-my-zsh
+    #     state: present
+    # - name: install zsh-autosuggestions
+    #   homebrew:
+    #     name: zsh-autosuggestions
+    #     state: present
+    # - name: install zsh-syntax-highlighting
+    #   homebrew:
+    #     name: zsh-syntax-highlighting
+    #     state: present
+    # - name: install zsh-completions
+    #   homebrew:
+    #     name: zsh-completions
+    #     state: present
